@@ -11,11 +11,16 @@ abstract class X_CreditNote extends Base\Model {
     protected $fillable = [
         'documentable_type',
         'documentable_id',
+        'used_amount',
         'is_paid',
     ];
 
     public function isPaid():bool {
         return $this->is_paid;
+    }
+
+    public function isUsed():bool {
+        return $this->payment_amount == $this->used_amount;
     }
 
 }

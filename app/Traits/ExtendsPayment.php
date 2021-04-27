@@ -19,7 +19,7 @@ trait ExtendsPayment {
                 'partnerable_id',
                 'document_number',
                 'transacted_at',
-                'amount',
+                'payment_amount',
             ];
             // hide identity from JSON response
             $model->hidden += [
@@ -80,12 +80,12 @@ trait ExtendsPayment {
         $this->identity->transacted_at = $value;
     }
 
-    public function getAmountAttribute() {
-        return $this->identity->amount;
+    public function getPaymentAmountAttribute() {
+        return $this->identity->payment_amount;
     }
 
-    public function setAmountAttribute($value) {
-        $this->identity->amount = $value;
+    public function setPaymentAmountAttribute($value) {
+        $this->identity->payment_amount = $value;
     }
 
 }

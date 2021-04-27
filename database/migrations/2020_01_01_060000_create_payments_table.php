@@ -25,7 +25,7 @@ class CreatePaymentsTable extends Migration {
             $table->morphable('partner');
             $table->string('document_number');
             $table->timestamp('transacted_at')->useCurrent();
-            $table->amount('amount');
+            $table->amount('payment_amount');
         });
 
         // create Credit table
@@ -49,6 +49,7 @@ class CreatePaymentsTable extends Migration {
         $schema->create('credit_notes', function(Blueprint $table) {
             $table->foreignTo('Payment', 'id')->primary();
             $table->morphable('document')->nullable();
+            $table->amount('used_amount')->default(0);
             $table->boolean('is_paid')->default(false);
         });
 
