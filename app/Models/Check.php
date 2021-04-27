@@ -2,6 +2,6 @@
 
 namespace HDSSolutions\Finpar\Models;
 
-class Empty extends X_Empty {
+class Check extends X_Check {
 
 }
