@@ -5,7 +5,7 @@ namespace HDSSolutions\Finpar\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Route;
 
-class EmptyMenu {
+class PaymentsMenu {
     /**
      * Handle an incoming request.
      *
@@ -16,23 +16,23 @@ class EmptyMenu {
     public function handle($request, Closure $next) {
         // create a submenu
         $sub = backend()->menu()
-            ->add(__('empty::empties.nav'), [
+            ->add(__('payments::payments.nav'), [
                 'icon'  => 'cogs',
             ])->data('priority', 700);
 
         $this
             // append items to submenu
-            ->empties($sub);
+            ->payments($sub);
 
         // continue witn next middleware
         return $next($request);
     }
 
-    private function empties(&$menu) {
-        if (Route::has('backend.empties'))
-            $menu->add(__('empty::empties.nav'), [
-                'route'     => 'backend.empties',
-                'icon'      => 'empties'
+    private function payments(&$menu) {
+        if (Route::has('backend.payments'))
+            $menu->add(__('payments::payments.nav'), [
+                'route'     => 'backend.payments',
+                'icon'      => 'payments'
             ]);
 
         return $this;
