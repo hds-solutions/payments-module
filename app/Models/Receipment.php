@@ -3,16 +3,14 @@
 namespace HDSSolutions\Finpar\Models;
 
 use HDSSolutions\Finpar\Traits\HasDocumentActions;
+use HDSSolutions\Finpar\Traits\HasPartnerable;
 
 class Receipment extends X_Receipment {
-    use HasDocumentActions;
+    use HasDocumentActions,
+        HasPartnerable;
 
     public function employee() {
         return $this->belongsTo(Employee::class);
-    }
-
-    public function partnerable() {
-        return $this->morphsTo();
     }
 
     public function currency() {
