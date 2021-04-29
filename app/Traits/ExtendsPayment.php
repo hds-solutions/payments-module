@@ -3,9 +3,11 @@
 namespace HDSSolutions\Finpar\Traits;
 
 use HDSSolutions\Finpar\Models\Payment;
+use HDSSolutions\Finpar\Traits\HasPartnerable;
 
 trait ExtendsPayment {
-    use HasIdentity;
+    use HasIdentity,
+        HasPartnerable;
 
     protected static $identityClass = Payment::class;
 
@@ -30,10 +32,6 @@ trait ExtendsPayment {
 
     public function getCompanyIdAttribute() {
         return $this->identity->company_id;
-    }
-
-    public function setCurrencyIdAttribute($value) {
-        $this->identity->company_id = $value;
     }
 
     public function company() {
@@ -61,7 +59,7 @@ trait ExtendsPayment {
     }
 
     public function partnerable() {
-        return $this->morphsTo();
+        return $this->identity->partnerable();
     }
 
     public function getDocumentNumberAttribute() {

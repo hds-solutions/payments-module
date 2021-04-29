@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Builder;
 abstract class X_CreditCard extends Base\Model {
     use ExtendsPayment;
 
+    public $incrementing = false;
+
     protected $fillable = [
         'card_holder',
         'card_number',

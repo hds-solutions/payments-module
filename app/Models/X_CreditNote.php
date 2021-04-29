@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Builder;
 abstract class X_CreditNote extends Base\Model {
     use ExtendsPayment;
 
+    public $incrementing = false;
+
     protected $fillable = [
         'documentable_type',
         'documentable_id',

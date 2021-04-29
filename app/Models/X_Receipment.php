@@ -18,6 +18,15 @@ abstract class X_Receipment extends Base\Model {
         'is_purchase',
     ];
 
+    protected static array $rules = [
+        'employee_id'       => [ 'required' ],
+        'partnerable_type'  => [ 'required' ],
+        'partnerable_id'    => [ 'required' ],
+        'currency_id'       => [ 'required' ],
+        'transacted_at'     => [ 'sometimes' ],
+        'document_number'   => [ 'sometimes' ],
+    ];
+
     public function isPurchase():bool {
         return $this->is_purchase;
     }

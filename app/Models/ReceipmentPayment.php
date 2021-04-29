@@ -13,7 +13,7 @@ class ReceipmentPayment extends X_ReceipmentPayment {
     }
 
     public function paymentable() {
-        return $this->morphsTo();
+        return $this->morphTo();
     }
 
 }
