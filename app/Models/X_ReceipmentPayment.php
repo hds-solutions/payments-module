@@ -2,11 +2,9 @@
 
 namespace HDSSolutions\Finpar\Models;
 
-use HDSSolutions\Finpar\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Builder;
 
-abstract class X_ReceipmentPayment extends Base\Model {
-    use BelongsToCompany;
+abstract class X_ReceipmentPayment extends Base\Pivot {
 
     protected $fillable = [
         'receipment_id',

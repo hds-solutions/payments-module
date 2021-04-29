@@ -32,7 +32,7 @@ class CreateReceipmentsTable extends Migration {
         });
 
         // paid invoices table
-        $schema->create('receipment_invoices', function(Blueprint $table) {
+        $schema->create('receipment_invoice', function(Blueprint $table) {
             $table->id();
             $table->foreignTo('Receipment');
             $table->foreignTo('Invoice');
@@ -41,7 +41,7 @@ class CreateReceipmentsTable extends Migration {
         });
 
         // payments table
-        $schema->create('receipment_payments', function(Blueprint $table) {
+        $schema->create('receipment_payment', function(Blueprint $table) {
             $table->id();
             $table->foreignTo('Receipment');
             $table->foreignTo('Currency');
