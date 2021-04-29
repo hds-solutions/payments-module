@@ -34,10 +34,6 @@ trait ExtendsPayment {
         return $this->identity->company_id;
     }
 
-    public function setCurrencyIdAttribute($value) {
-        $this->identity->company_id = $value;
-    }
-
     public function company() {
         return $this->identity->company();
     }
@@ -60,6 +56,10 @@ trait ExtendsPayment {
 
     public function setPartnerableTypeAttribute($value) {
         $this->identity->partnerable_type = $value;
+    }
+
+    public function partnerable() {
+        return $this->identity->partnerable();
     }
 
     public function getDocumentNumberAttribute() {
