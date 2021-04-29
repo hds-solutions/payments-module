@@ -18,17 +18,67 @@ class Receipment extends X_Receipment {
     }
 
     public function invoices() {
-        return $this->hasMany(ReceipmentInvoice::class);
+        return $this->belongsToMany(Invoice::class, 'receipment_invoice')
+            ->using(ReceipmentInvoice::class)
+            ->withTimestamps()
+            ->withPivot([ 'imputed_amount' ]);
     }
 
-    public function payments() {
-        return $this->hasMany(ReceipmentPayment::class);
+    public function cashLines() {
+        return $this->morphedByMany(CashLine::class, 'paymentable', 'receipment_payment');
+    }
+
+    public function credits() {
+        return $this->morphedByMany(Credit::class, 'paymentable', 'receipment_payment');
+    }
+
+    public function checks() {
+        return $this->morphedByMany(Check::class, 'paymentable', 'receipment_payment');
+    }
+
+    public function creditNotes() {
+        return $this->morphedByMany(CreditNote::class, 'paymentable', 'receipment_payment');
+    }
+
+    public function promissoryNotes() {
+        return $this->morphedByMany(PromissoryNote::class, 'paymentable', 'receipment_payment');
+    }
+
+    public function creditCards() {
+        return $this->morphedByMany(CreditCard::class, 'paymentable', 'receipment_payment');
+    }
+
+    public function getPaymentsAttribute() {
+        //
+        return $this->cashLines
+            ->merge( $this->credits )
+            ->merge( $this->checks )
+            ->merge( $this->creditNotes )
+            ->merge( $this->promissoryNotes )
+            ->merge( $this->creditCards );
     }
 
     public function prepareIt():?string {
         // TODO: check that there are invoices to pay
+        if ($this->invoices()->count() === 0)
+            // reject document with error
+            return $this->documentError('payments::receipments.no-invoices');
+
         // TODO: check that there are payments to apply
+        if ($this->payments()->count() === 0)
+            // reject document with error
+            return $this->documentError('payments::receipments.no-payments');
+
         // TODO: check if there is an invoices already paid
+        foreach ($this->invoices as $invoice) {
+            // check if invoice is already paid
+            if ($invoice->is_paid)
+                // reject document with error
+                return $this->documentError('payments::receipments.invoice-already-paid', [
+                    'invoice'   => $invoice
+                ]);
+        }
+
         // TODO: check sum(payments.payment_amount) == sum(invoices.imputed_amount)
         // TODO: check if there is invoices.is_credit=false and there is credit payments, if so reject
         // TODO: check if there are credit payments
