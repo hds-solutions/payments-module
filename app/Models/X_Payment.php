@@ -12,9 +12,18 @@ abstract class X_Payment extends Base\Model {
         'currency_id',
         'partnerable_type',
         'partnerable_id',
-        'document_no',
+        'document_number',
         'transacted_at',
-        'amount',
+        'payment_amount',
+    ];
+
+    protected static array $rules = [
+        'currency_id'       => [ 'required' ],
+        'partnerable_type'  => [ 'required' ],
+        'partnerable_id'    => [ 'required' ],
+        'document_number'   => [ 'required' ],
+        'transacted_at'     => [ 'sometimes' ],
+        'payment_amount'    => [ 'required', 'min:0' ],
     ];
 
 }

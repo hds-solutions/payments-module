@@ -14,4 +14,10 @@ abstract class X_ReceipmentInvoice extends Base\Model {
         'imputed_amount',
     ];
 
+    protected static array $rules = [
+        'receipment_id'     => [ 'required' ],
+        'invoice_id'        => [ 'required' ],
+        'imputed_amount'    => [ 'required', 'numeric', 'min:0' ],
+    ];
+
 }
