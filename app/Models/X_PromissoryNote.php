@@ -2,10 +2,10 @@
 
 namespace HDSSolutions\Finpar\Models;
 
+use HDSSolutions\Finpar\Contracts\PaymentContract;
 use HDSSolutions\Finpar\Traits\ExtendsPayment;
-use Illuminate\Database\Eloquent\Builder;
 
-abstract class X_PromissoryNote extends Base\Model {
+abstract class X_PromissoryNote extends Base\Model implements PaymentContract {
     use ExtendsPayment;
 
     public $incrementing = false;
@@ -15,8 +15,6 @@ abstract class X_PromissoryNote extends Base\Model {
         'is_paid',
     ];
 
-    public function isPaid():bool {
-        return $this->is_paid;
-    }
+    protected $with = [ 'identity' ];
 
 }

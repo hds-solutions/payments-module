@@ -22,17 +22,29 @@ class PaymentsMenu {
 
         $this
             // append items to submenu
-            ->payments($sub);
+            ->checks($sub)
+            ->credit_notes($sub)
+            ;
 
         // continue witn next middleware
         return $next($request);
     }
 
-    private function payments(&$menu) {
-        if (Route::has('backend.payments'))
-            $menu->add(__('payments::payments.nav'), [
-                'route'     => 'backend.payments',
-                'icon'      => 'payments'
+    private function checks(&$menu) {
+        if (Route::has('backend.checks'))
+            $menu->add(__('payments::checks.nav'), [
+                'route'     => 'backend.checks',
+                'icon'      => 'checks'
+            ]);
+
+        return $this;
+    }
+
+    private function credit_notes(&$menu) {
+        if (Route::has('backend.credit_notes'))
+            $menu->add(__('payments::credit_notes.nav'), [
+                'route'     => 'backend.credit_notes',
+                'icon'      => 'credit_notes'
             ]);
 
         return $this;

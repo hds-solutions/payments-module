@@ -2,10 +2,10 @@
 
 namespace HDSSolutions\Finpar\Models;
 
+use HDSSolutions\Finpar\Contracts\PaymentContract;
 use HDSSolutions\Finpar\Traits\ExtendsPayment;
-use Illuminate\Database\Eloquent\Builder;
 
-abstract class X_CreditNote extends Base\Model {
+abstract class X_CreditNote extends Base\Model implements PaymentContract {
     use ExtendsPayment;
 
     public $incrementing = false;
@@ -13,16 +13,16 @@ abstract class X_CreditNote extends Base\Model {
     protected $fillable = [
         'documentable_type',
         'documentable_id',
+        'description',
         'used_amount',
+        'is_used',
         'is_paid',
     ];
 
-    public function isPaid():bool {
-        return $this->is_paid;
-    }
+    protected $with = [ 'identity' ];
 
-    public function isUsed():bool {
-        return $this->payment_amount == $this->used_amount;
+    public function getIsUsedAttribute():bool {
+        return $this->attributes['is_used'] || $this->payment_amount == $this->used_amount;
     }
 
 }

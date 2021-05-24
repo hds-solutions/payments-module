@@ -7,16 +7,82 @@
     ],
 
     'payment_type'     => [
-        'Cash Type',
-        '_' => 'Cash Type',
-        '?' => 'Cash Type help text',
+        'Payment Type',
+        '_' => 'Payment Type',
+        '?' => 'Payment Type help text',
 
-        'cash'           => 'Transfer In',
-        'credit'          => 'Transfer Out',
-        'check'            => 'Difference',
-        'credit_note'           => 'Credit Note',
-        'fast_pay' => 'Employee Anticipation',
-        'card'       => 'General Expense',
+        'cash'          => 'Cash',
+        'credit'        => 'Credit',
+        'check'         => 'Check',
+        'credit_note'   => 'Credit Note',
+        'promissory'    => 'Promissory',
+        'card'          => 'Card',
+    ],
+
+    'payment_amount'    => [
+        'Payment amount',
+        '_' => 'Payment amount',
+        '?' => 'Payment amount help text',
+    ],
+
+    'bank_name'         => [
+        'Bank name',
+        '_' => 'Bank name',
+        '?' => 'Bank name help text',
+    ],
+
+    'bank_account'      => [
+        'Bank account',
+        '_' => 'Bank account',
+        '?' => 'Bank account help text',
+    ],
+
+    'account_holder'    => [
+        'Account holder',
+        '_' => 'Account holder',
+        '?' => 'Account holder help text',
+    ],
+
+    'due_date'          => [
+        'Due date',
+        '_' => 'Due date',
+        '?' => 'Due date help text',
+    ],
+
+    'credit_note_id'    => [
+        'Credit Note',
+        '_' => 'Credit Note',
+        '?' => 'Credit Note help text',
+    ],
+
+    'card_holder'       => [
+        'Card holder',
+        '_' => 'Card holder',
+        '?' => 'Card holder help text',
+    ],
+
+    'card_number'       => [
+        'Card number',
+        '_' => 'Card number (last four digits)',
+        '?' => 'Card number help text',
+    ],
+
+    'is_credit'         => [
+        'Is credit card?',
+        '_' => 'Yes, is credit card',
+        '?' => 'Check if card is credit',
+    ],
+
+    'interest'          => [
+        'Interest',
+        '_' => 'Interest',
+        '?' => 'Interest help text',
+    ],
+
+    'dues'              => [
+        'Dues',
+        '_' => 'Dues',
+        '?' => 'Dues help text',
     ],
 
 ];

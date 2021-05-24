@@ -2,10 +2,10 @@
 
 namespace HDSSolutions\Finpar\Models;
 
+use HDSSolutions\Finpar\Contracts\PaymentContract;
 use HDSSolutions\Finpar\Traits\ExtendsPayment;
-use Illuminate\Database\Eloquent\Builder;
 
-abstract class X_CreditCard extends Base\Model {
+abstract class X_Card extends Base\Model implements PaymentContract {
     use ExtendsPayment;
 
     public $incrementing = false;
@@ -13,10 +13,9 @@ abstract class X_CreditCard extends Base\Model {
     protected $fillable = [
         'card_holder',
         'card_number',
+        'is_credit',
     ];
 
-    public function isPaid():bool {
-        return $this->is_paid;
-    }
+    protected $with = [ 'identity' ];
 
 }

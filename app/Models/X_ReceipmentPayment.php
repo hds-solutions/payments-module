@@ -2,8 +2,6 @@
 
 namespace HDSSolutions\Finpar\Models;
 
-use Illuminate\Database\Eloquent\Builder;
-
 abstract class X_ReceipmentPayment extends Base\Pivot {
 
     protected $fillable = [
@@ -24,6 +22,10 @@ abstract class X_ReceipmentPayment extends Base\Pivot {
         'conversion_rate'   => [ 'sometimes', 'nullable', 'min:0' ],
         'payment_amount'    => [ 'required', 'numeric', 'min:0' ],
         'used_amount'       => [ 'sometimes', 'numeric', 'min:0' ],
+    ];
+
+    protected $attributes = [
+        'used_amount'       => 0,
     ];
 
 }

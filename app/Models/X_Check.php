@@ -2,10 +2,10 @@
 
 namespace HDSSolutions\Finpar\Models;
 
+use HDSSolutions\Finpar\Contracts\PaymentContract;
 use HDSSolutions\Finpar\Traits\ExtendsPayment;
-use Illuminate\Database\Eloquent\Builder;
 
-abstract class X_Check extends Base\Model {
+abstract class X_Check extends Base\Model implements PaymentContract {
     use ExtendsPayment;
 
     public $incrementing = false;
@@ -17,6 +17,8 @@ abstract class X_Check extends Base\Model {
         'due_date',
         'is_deposited',
     ];
+
+    protected $with = [ 'identity' ];
 
     protected $attributes = [
         'is_deposited'  => false,

@@ -31,6 +31,8 @@ class CreatePaymentsTable extends Migration {
         // create Credit table
         $schema->create('credits', function(Blueprint $table) {
             $table->foreignTo('Payment', 'id')->primary();
+            $table->unsignedDecimal('interest')->default(0);
+            $table->unsignedTinyInteger('dues')->default(1);
         });
 
         // create Check table
@@ -49,7 +51,9 @@ class CreatePaymentsTable extends Migration {
         $schema->create('credit_notes', function(Blueprint $table) {
             $table->foreignTo('Payment', 'id')->primary();
             $table->morphable('document')->nullable();
+            $table->string('description');
             $table->amount('used_amount')->default(0);
+            $table->boolean('is_used')->default(false);
             $table->boolean('is_paid')->default(false);
         });
 
@@ -60,11 +64,12 @@ class CreatePaymentsTable extends Migration {
             $table->boolean('is_paid')->default(false);
         });
 
-        // create CreditCard table
-        $schema->create('credit_cards', function(Blueprint $table) {
+        // create Card table
+        $schema->create('cards', function(Blueprint $table) {
             $table->foreignTo('Payment', 'id')->primary();
             $table->string('card_holder');
             $table->string('card_number', 4);
+            $table->string('is_credit')->default(false);
         });
     }
 

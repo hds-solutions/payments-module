@@ -3,21 +3,27 @@
 namespace HDSSolutions\Finpar\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use HDSSolutions\Finpar\DataTables\EmptyDataTable as DataTable;
+use HDSSolutions\Finpar\DataTables\CheckDataTable as DataTable;
 use HDSSolutions\Finpar\Http\Request;
-use HDSSolutions\Finpar\Models\Empty as Resource;
+use HDSSolutions\Finpar\Models\Check as Resource;
 
-class EmptyController extends Controller {
+class CheckController extends Controller {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request, DataTable $dataTable) {
+        // check only-form flag
+        if ($request->has('only-form'))
+            // redirect to popup callback
+            return view('backend::components.popup-callback', [ 'resource' => new Resource ]);
+
         // load resources
         if ($request->ajax()) return $dataTable->ajax();
+
         // return view with dataTable
-        return $dataTable->render('empties::empties.index', [ 'count' => Resource::count() ]);
+        return $dataTable->render('payments::checks.index', [ 'count' => Resource::count() ]);
     }
 
     /**
@@ -27,7 +33,7 @@ class EmptyController extends Controller {
      */
     public function create() {
         // show create form
-        return view('empties::empties.create');
+        return view('payments::checks.create');
     }
 
     /**
@@ -48,7 +54,7 @@ class EmptyController extends Controller {
                 ->withInput();
 
         // redirect to list
-        return redirect()->route('backend.empties');
+        return redirect()->route('backend.checks');
     }
 
     /**
@@ -59,7 +65,7 @@ class EmptyController extends Controller {
      */
     public function show(Resource $resource) {
         // redirect to list
-        return redirect()->route('backend.empties');
+        return redirect()->route('backend.checks');
     }
 
     /**
@@ -70,7 +76,7 @@ class EmptyController extends Controller {
      */
     public function edit(Resource $resource) {
         // show edit form
-        return view('empties::empties.edit', compact('resource'));
+        return view('payments::checks.edit', compact('resource'));
     }
 
     /**
@@ -92,7 +98,7 @@ class EmptyController extends Controller {
                 ->withInput();
 
         // redirect to list
-        return redirect()->route('backend.empties');
+        return redirect()->route('backend.checks');
     }
 
     /**
@@ -109,7 +115,7 @@ class EmptyController extends Controller {
             // redirect with errors
             return back();
         // redirect to list
-        return redirect()->route('backend.empties');
+        return redirect()->route('backend.checks');
     }
 
 }

@@ -2,8 +2,6 @@
 
 namespace HDSSolutions\Finpar\Models;
 
-use Illuminate\Database\Eloquent\Builder;
-
 abstract class X_ReceipmentInvoice extends Base\Pivot {
 
     protected $table = 'receipment_invoice';

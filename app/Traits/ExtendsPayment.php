@@ -11,7 +11,7 @@ trait ExtendsPayment {
 
     protected static $identityClass = Payment::class;
 
-    public static function bootExtendsPerson() {
+    public static function bootExtendsPayment() {
         self::retrieved(function($model) {
             // append identity fields
             $model->appends += [
@@ -56,6 +56,14 @@ trait ExtendsPayment {
 
     public function setPartnerableTypeAttribute($value) {
         $this->identity->partnerable_type = $value;
+    }
+
+    public function getPartnerableIdAttribute() {
+        return $this->identity->partnerable_id;
+    }
+
+    public function setPartnerableIdAttribute($value) {
+        $this->identity->partnerable_id = $value;
     }
 
     public function partnerable() {
