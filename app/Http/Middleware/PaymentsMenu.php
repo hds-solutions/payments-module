@@ -5,14 +5,8 @@ namespace HDSSolutions\Finpar\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Route;
 
-class PaymentsMenu {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
-     */
+class PaymentsMenu extends Base\Menu {
+
     public function handle($request, Closure $next) {
         // create a submenu
         $sub = backend()->menu()
@@ -31,7 +25,7 @@ class PaymentsMenu {
     }
 
     private function checks(&$menu) {
-        if (Route::has('backend.checks'))
+        if (Route::has('backend.checks') && $this->can('checks'))
             $menu->add(__('payments::checks.nav'), [
                 'route'     => 'backend.checks',
                 'icon'      => 'checks'
@@ -41,7 +35,7 @@ class PaymentsMenu {
     }
 
     private function credit_notes(&$menu) {
-        if (Route::has('backend.credit_notes'))
+        if (Route::has('backend.credit_notes') && $this->can('credit_notes'))
             $menu->add(__('payments::credit_notes.nav'), [
                 'route'     => 'backend.credit_notes',
                 'icon'      => 'credit_notes'
