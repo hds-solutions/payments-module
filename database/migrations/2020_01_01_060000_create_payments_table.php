@@ -41,7 +41,7 @@ class CreatePaymentsTable extends Migration {
             $table->string('bank_name');
             $table->string('bank_account');
             $table->string('account_holder');
-            $table->timestamp('due_date');
+            $table->timestamp('due_date')->useCurrent();
             $table->boolean('is_deposited')->default(false);
             // $table->foreignTo('Bank')->nullable();
             // $table->foreignTo('BankAccount')->nullable();
@@ -60,7 +60,7 @@ class CreatePaymentsTable extends Migration {
         // create PromissoryNote table
         $schema->create('promissory_notes', function(Blueprint $table) {
             $table->foreignTo('Payment', 'id')->primary();
-            $table->timestamp('due_date');
+            $table->timestamp('due_date')->useCurrent();
             $table->boolean('is_paid')->default(false);
         });
 
