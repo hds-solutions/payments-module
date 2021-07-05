@@ -3,6 +3,7 @@
 namespace HDSSolutions\Finpar;
 
 use HDSSolutions\Laravel\Modules\ModuleServiceProvider;
+use HDSSolutions\Finpar\Models\Payment;
 
 class PaymentsModuleServiceProvider extends ModuleServiceProvider {
 
@@ -39,6 +40,7 @@ class PaymentsModuleServiceProvider extends ModuleServiceProvider {
             require_once $helpers;
         // register singleton
         app()->singleton(Payments::class, fn() => new Payments);
+        $this->alias('Payment', Payment::class);
         // register commands
         $this->commands( $this->commands );
         // merge configuration
