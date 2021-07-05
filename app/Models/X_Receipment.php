@@ -36,11 +36,11 @@ abstract class X_Receipment extends Base\Model {
     }
 
     public function getInvoicesAmountAttribute() {
-        return $this->invoices->sum('pivot.imputed_amount');
+        return $this->invoices->sum('receipmentInvoice.imputed_amount');
     }
 
     public function getPaymentsAmountAttribute() {
-        return $this->payments->sum('pivot.payment_amount');
+        return $this->payments->sum('receipmentPayment.payment_amount');
     }
 
 }

@@ -2,7 +2,7 @@
 
 namespace HDSSolutions\Finpar\Models;
 
-abstract class X_ReceipmentPayment extends Base\Pivot {
+abstract class X_ReceipmentPayment extends Base\MorphPivot {
 
     protected $fillable = [
         'receipment_id',

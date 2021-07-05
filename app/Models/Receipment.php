@@ -22,43 +22,56 @@ class Receipment extends X_Receipment implements Document {
         return $this->belongsToMany(Invoice::class, 'receipment_invoice')
             ->using(ReceipmentInvoice::class)
             ->withTimestamps()
-            ->withPivot([ 'imputed_amount' ]);
+            ->withPivot([ 'imputed_amount' ])
+            ->as('receipmentInvoice');
     }
 
     public function cashLines() {
         return $this->morphedByMany(CashLine::class, 'paymentable', 'receipment_payment')
+            ->using(ReceipmentPayment::class)
             ->withTimestamps()
-            ->withPivot([ 'payment_amount', 'used_amount' ]);
+            ->withPivot([ 'currency_id', 'payment_type', 'payment_amount', 'used_amount' ])
+            ->as('receipmentPayment');
     }
 
     public function credits() {
         return $this->morphedByMany(Credit::class, 'paymentable', 'receipment_payment')
+            ->using(ReceipmentPayment::class)
             ->withTimestamps()
-            ->withPivot([ 'payment_amount', 'used_amount' ]);
+            ->withPivot([ 'currency_id', 'payment_type', 'payment_amount', 'used_amount' ])
+            ->as('receipmentPayment');
     }
 
     public function checks() {
         return $this->morphedByMany(Check::class, 'paymentable', 'receipment_payment')
+            ->using(ReceipmentPayment::class)
             ->withTimestamps()
-            ->withPivot([ 'payment_amount', 'used_amount' ]);
+            ->withPivot([ 'currency_id', 'payment_type', 'payment_amount', 'used_amount', 'credit_note_id' ])
+            ->as('receipmentPayment');
     }
 
     public function creditNotes() {
         return $this->morphedByMany(CreditNote::class, 'paymentable', 'receipment_payment')
+            ->using(ReceipmentPayment::class)
             ->withTimestamps()
-            ->withPivot([ 'payment_amount', 'used_amount' ]);
+            ->withPivot([ 'currency_id', 'payment_type', 'payment_amount', 'used_amount' ])
+            ->as('receipmentPayment');
     }
 
     public function promissoryNotes() {
         return $this->morphedByMany(PromissoryNote::class, 'paymentable', 'receipment_payment')
+            ->using(ReceipmentPayment::class)
             ->withTimestamps()
-            ->withPivot([ 'payment_amount', 'used_amount' ]);
+            ->withPivot([ 'currency_id', 'payment_type', 'payment_amount', 'used_amount' ])
+            ->as('receipmentPayment');
     }
 
     public function cards() {
         return $this->morphedByMany(Card::class, 'paymentable', 'receipment_payment')
+            ->using(ReceipmentPayment::class)
             ->withTimestamps()
-            ->withPivot([ 'payment_amount', 'used_amount' ]);
+            ->withPivot([ 'currency_id', 'payment_type', 'payment_amount', 'used_amount' ])
+            ->as('receipmentPayment');
     }
 
     public function payments() {
@@ -105,9 +118,9 @@ class Receipment extends X_Receipment implements Document {
         }
 
         // get invoices inputed amount
-        $imputedAmount = $this->invoices->sum('pivot.imputed_amount');
+        $imputedAmount = $this->invoices->sum('receipmentInvoice.imputed_amount');
         // get payments amount
-        $paymentsAmount = $this->payments->sum('pivot.payment_amount');
+        $paymentsAmount = $this->payments->sum('receipmentPayment.payment_amount');
         // TODO: check sum(payments.payment_amount) == sum(invoices.imputed_amount)
         if ($imputedAmount > $paymentsAmount)
             // reject document with error
@@ -141,14 +154,14 @@ class Receipment extends X_Receipment implements Document {
 
     public function completeIt():?string {
         // get total invoices imputed amount
-        $pendingAmount = $this->invoices->sum('pivot.imputed_amount');
+        $pendingAmount = $this->invoices->sum('receipmentInvoice.imputed_amount');
         // TODO: for each ReceipmentPayment
         foreach ($this->payments as $payment) {
             switch (true) {
                 // TODO: if ReceipmentPayment type=creditNote
                 case $payment instanceof CreditNote:
                     // TODO: substract creditNote.used_amount
-                    $payment->used_amount += $payment->pivot->payment_amount;
+                    $payment->used_amount += $payment->receipmentPayment->payment_amount;
                     break;
 
                 // TODO: if ReceipmentPayment type=check
@@ -193,18 +206,18 @@ class Receipment extends X_Receipment implements Document {
             };
 
             // TODO: set ReceipmentPayment.used_amount
-            if (!$this->$relation()->updateExistingPivot($payment->id, [ 'used_amount' => $payment->pivot->payment_amount ]))
+            if (!$this->$relation()->updateExistingPivot($payment->id, [ 'used_amount' => $payment->receipmentPayment->payment_amount ]))
                 // reject document with error
                 return $this->documentError('payments::receipments.payment-update-failed');
 
             // substract payment amount from pending payments amount
-            $pendingAmount -= ($payment->payment_amount ?? $payment->amount);
+            $pendingAmount -= $payment->receipmentPayment->payment_amount;
         }
 
         // TODO: for each ReceipmentInvoice
         foreach ($this->invoices as $invoice) {
             // TODO: set ReceipmentInvoice.invoice.paid_amount = ReceipmentInvoice.inputed_amount
-            $invoice->paid_amount += $invoice->pivot->imputed_amount;
+            $invoice->paid_amount += $invoice->receipmentInvoice->imputed_amount;
             // TODO: set Invoice.is_paid=true if paid_amount == imputed_amount
             $invoice->is_paid = $invoice->paid_amount == $invoice->total;
             // save invoice changes
