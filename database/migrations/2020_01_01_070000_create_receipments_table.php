@@ -47,8 +47,10 @@ class CreateReceipmentsTable extends Migration {
             $table->foreignTo('Currency');
             $table->morphable('payment');
             $table->unsignedInteger('conversion_rate')->nullable();
+            $table->char('payment_type', 2);
             $table->amount('payment_amount');
             $table->amount('used_amount')->default(0);
+            $table->foreignTo('CreditNote')->nullable();
         });
     }
 

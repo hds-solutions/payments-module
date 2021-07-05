@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Builder;
 
 class CreditNote extends X_CreditNote {
 
+    public static function nextDocumentNumber():string {
+        // return next document number for specified stamping
+        return str_increment(self::join('payments', 'payments.id', 'credit_notes.id')->max('document_number') ?? null);
+    }
+
     public function scopeAvailable(Builder $query) {
         return $this->scopeUsed($query, false);
     }

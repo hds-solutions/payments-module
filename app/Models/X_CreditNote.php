@@ -11,6 +11,7 @@ abstract class X_CreditNote extends Base\Model implements PaymentContract {
     public $incrementing = false;
 
     protected $fillable = [
+        'document_number',
         'documentable_type',
         'documentable_id',
         'description',
