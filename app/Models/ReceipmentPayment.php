@@ -12,6 +12,10 @@ class ReceipmentPayment extends X_ReceipmentPayment {
         return $this->belongsTo(Currency::class);
     }
 
+    public function creditNote() {
+        return $this->belongsTo(CreditNote::class);
+    }
+
     public function paymentable() {
         return $this->morphTo();
     }

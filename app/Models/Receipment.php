@@ -10,6 +10,11 @@ class Receipment extends X_Receipment implements Document {
     use HasDocumentActions,
         HasPartnerable;
 
+    public static function nextDocumentNumber():string {
+        // return next document number for specified stamping
+        return str_increment(self::max('document_number') ?? null);
+    }
+
     public function employee() {
         return $this->belongsTo(Employee::class);
     }
@@ -170,7 +175,7 @@ class Receipment extends X_Receipment implements Document {
                     if ($payment->payment_amount > $pendingAmount) {
                         // TODO: generate CreditNote for remaining check amount
                         $creditNote = CreditNote::make([
-                            'document_number'   => 1234, // TODO: get next credit note number
+                            'document_number'   => CreditNote::nextDocumentNumber(),
                             'payment_amount'    => $amount = ($payment->payment_amount - $pendingAmount),
                             'description'       => __('payments::credit_note.check-diff', [
                                 'document_number'   => $payment->document_number,
@@ -184,6 +189,13 @@ class Receipment extends X_Receipment implements Document {
                         if (!$creditNote->save())
                             // redirect error
                             return $this->documentError( $creditNote->errors()->first() ?? 'payments::receipments.check-diff-credit-note-creation-failed' );
+
+                        // link creditnote to current payment
+                        if (!$this->checks()->updateExistingPivot($payment->id, [
+                            'credit_note_id'    => $creditNote->id,
+                        ]))
+                            // reject document with error
+                            return $this->documentError('payments::receipments.payment-check-credit-note-failed');
 
                         // set pending amount to 0 (zero)
                         $pendingAmount = 0;
