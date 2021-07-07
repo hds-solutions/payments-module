@@ -43,4 +43,8 @@ abstract class X_Receipment extends Base\Model {
         return $this->payments->sum('receipmentPayment.payment_amount');
     }
 
+    public function getTransactedAtPrettyAttribute():string {
+        return pretty_date($this->transacted_at, true);
+    }
+
 }
