@@ -96,17 +96,17 @@ class Receipment extends X_Receipment implements Document {
     }
 
     public function prepareIt():?string {
-        // TODO: check that there are invoices to pay
+        // check that there are invoices to pay
         if ($this->invoices()->count() === 0)
             // reject document with error
             return $this->documentError('payments::receipments.no-invoices');
 
-        // TODO: check that there are payments to apply
+        // check that there are payments to apply
         if ($this->payments()->count() === 0)
             // reject document with error
             return $this->documentError('payments::receipments.no-payments');
 
-        // TODO: check if there is an invoices already paid
+        // check if there is an invoices already paid
         foreach ($this->invoices as $invoice) {
             // check that invoice is completed
             if (!$invoice->isCompleted)
@@ -126,7 +126,7 @@ class Receipment extends X_Receipment implements Document {
         $imputedAmount = $this->invoices->sum('receipmentInvoice.imputed_amount');
         // get payments amount
         $paymentsAmount = $this->payments->sum('receipmentPayment.payment_amount');
-        // TODO: check sum(payments.payment_amount) == sum(invoices.imputed_amount)
+        // check sum(payments.payment_amount) == sum(invoices.imputed_amount)
         if ($imputedAmount > $paymentsAmount)
             // reject document with error
             return $this->documentError('payments::receipments.imputed-gt-payments', [
@@ -134,20 +134,20 @@ class Receipment extends X_Receipment implements Document {
                 'payments_amount'   => $paymentsAmount,
             ]);
 
-        // TODO: check if there is invoices.is_credit=false and there is credit payments, if so reject
+        // check if there is invoices.is_credit=false and there is credit payments, if so reject
         $has_cash_invoices = false;
         $this->invoices->each(fn($invoice) => $has_cash_invoices = $invoice->is_cash || $has_cash_invoices);
         if ($this->credits->count() > 0 && $has_cash_invoices)
             // reject document with error
             return $this->documentError('payments::receipments.credit-with-cash-invoices');
 
-        // TODO: check if there are credit payments
+        // check if there are credit payments
         if ($this->credits->count()) {
-            // TODO: check if partner doesn't have credit enabled
+            // check if partner doesn't have credit enabled
             if (!$this->partnerable->has_credit_enabled)
                 // reject document with error
                 return $this->documentError('payments::receipments.partnerable-no-credit-enabled');
-            // TODO: check if partner doesn't have enought credit available
+            // check if partner doesn't have enought credit available
             if ($this->partnerable->credit_available === 0)
                 // reject document with error
                 return $this->documentError('payments::receipments.partnerable-no-credit-available');
@@ -160,20 +160,20 @@ class Receipment extends X_Receipment implements Document {
     public function completeIt():?string {
         // get total invoices imputed amount
         $pendingAmount = $this->invoices->sum('receipmentInvoice.imputed_amount');
-        // TODO: for each ReceipmentPayment
+        // for each ReceipmentPayment
         foreach ($this->payments as $payment) {
             switch (true) {
-                // TODO: if ReceipmentPayment type=creditNote
+                // if ReceipmentPayment type=creditNote
                 case $payment instanceof CreditNote:
-                    // TODO: substract creditNote.used_amount
+                    // substract creditNote.used_amount
                     $payment->used_amount += $payment->receipmentPayment->payment_amount;
                     break;
 
-                // TODO: if ReceipmentPayment type=check
+                // if ReceipmentPayment type=check
                 case $payment instanceof Check:
-                    // TODO: if Check.payment_amount > pendingReceipmentAmount
+                    // if Check.payment_amount > pendingReceipmentAmount
                     if ($payment->payment_amount > $pendingAmount) {
-                        // TODO: generate CreditNote for remaining check amount
+                        // generate CreditNote for remaining check amount
                         $creditNote = CreditNote::make([
                             'document_number'   => CreditNote::nextDocumentNumber(),
                             'payment_amount'    => $amount = ($payment->payment_amount - $pendingAmount),
@@ -217,7 +217,7 @@ class Receipment extends X_Receipment implements Document {
                 Card::class             => 'cards',
             };
 
-            // TODO: set ReceipmentPayment.used_amount
+            // set ReceipmentPayment.used_amount
             if (!$this->$relation()->updateExistingPivot($payment->id, [ 'used_amount' => $payment->receipmentPayment->payment_amount ]))
                 // reject document with error
                 return $this->documentError('payments::receipments.payment-update-failed');
@@ -226,11 +226,11 @@ class Receipment extends X_Receipment implements Document {
             $pendingAmount -= $payment->receipmentPayment->payment_amount;
         }
 
-        // TODO: for each ReceipmentInvoice
+        // for each ReceipmentInvoice
         foreach ($this->invoices as $invoice) {
-            // TODO: set ReceipmentInvoice.invoice.paid_amount = ReceipmentInvoice.inputed_amount
+            // set ReceipmentInvoice.invoice.paid_amount = ReceipmentInvoice.inputed_amount
             $invoice->paid_amount += $invoice->receipmentInvoice->imputed_amount;
-            // TODO: set Invoice.is_paid=true if paid_amount == imputed_amount
+            // set Invoice.is_paid=true if paid_amount == imputed_amount
             $invoice->is_paid = $invoice->paid_amount == $invoice->total;
             // save invoice changes
             if (!$invoice->save())
