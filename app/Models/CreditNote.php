@@ -7,18 +7,18 @@ use Illuminate\Database\Eloquent\Builder;
 class CreditNote extends X_CreditNote {
 
     public static function nextDocumentNumber():string {
-        // return next document number for specified stamping
+        // return next document number
         return str_increment(self::join('payments', 'payments.id', 'credit_notes.id')->max('document_number') ?? null);
     }
 
-    public function __construct(array|InOut $attributes = []) {
-        // check if is instance of InOut
-        if (($materialReturn = $attributes) instanceof InOut) $attributes = self::fromMaterialReturn($materialReturn);
+    public function __construct(array|MaterialReturn $attributes = []) {
+        // check if is instance of MaterialReturn
+        if (($materialReturn = $attributes) instanceof MaterialReturn) $attributes = self::fromMaterialReturn($materialReturn);
         // redirect attributes to parent
         parent::__construct(is_array($attributes) ? $attributes : []);
     }
 
-    private static function fromMaterialReturn(InOut $materialReturn):array {
+    private static function fromMaterialReturn(MaterialReturn $materialReturn):array {
         // copy invoice attributes
         $attributes = [
             'currency_id'       => $materialReturn->invoice->currency_id,
@@ -41,7 +41,7 @@ class CreditNote extends X_CreditNote {
         return $attributes;
     }
 
-    public static function createFromMaterialReturn(int|InOut $materialReturn, array $attributes = []):CreditNote {
+    public static function createFromMaterialReturn(int|MaterialReturn $materialReturn, array $attributes = []):CreditNote {
         // make creditNote
         $creditNote = self::makeFromMaterialReturn($materialReturn, $attributes);
         // save created creditNote
@@ -50,9 +50,9 @@ class CreditNote extends X_CreditNote {
         return $creditNote;
     }
 
-    public static function makeFromMaterialReturn(int|InOut $materialReturn, array $attributes = []):CreditNote {
+    public static function makeFromMaterialReturn(int|MaterialReturn $materialReturn, array $attributes = []):CreditNote {
         // load materialReturn if isn't instance
-        if (!$materialReturn instanceof InOut) $materialReturn = InOut::findOrFail($materialReturn);
+        if (!$materialReturn instanceof MaterialReturn) $materialReturn = MaterialReturn::findOrFail($materialReturn);
         // create new CreditNote from materialReturn
         $creditNote = new self($materialReturn);
         // append extra attributes
