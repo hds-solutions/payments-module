@@ -18,4 +18,12 @@ abstract class X_Card extends Base\Model implements PaymentContract {
 
     protected $with = [ 'identity' ];
 
+    public final function getCardNumberAttribute():string {
+        return $this->identity->document_number;
+    }
+
+    public final function setCardNumberAttribute(string $card_number):void {
+        $this->identity->document_number = $card_number;
+    }
+
 }
