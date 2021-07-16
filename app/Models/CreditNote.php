@@ -58,7 +58,7 @@ class CreditNote extends X_CreditNote {
         // append extra attributes
         $creditNote->fill( $attributes );
         // link Invoice from which material is returned
-        $creditNote->documentable()->associate( $materialReturn->invoice );
+        $creditNote->documentable()->associate( $materialReturn );
         // return CreditNote
         return $creditNote;
     }
