@@ -1,9 +1,9 @@
 <?php
 
-namespace HDSSolutions\Finpar\Traits;
+namespace HDSSolutions\Laravel\Traits;
 
-use HDSSolutions\Finpar\Models\Payment;
-use HDSSolutions\Finpar\Traits\HasPartnerable;
+use HDSSolutions\Laravel\Models\Payment;
+use HDSSolutions\Laravel\Traits\HasPartnerable;
 
 trait ExtendsPayment {
     use HasIdentity,

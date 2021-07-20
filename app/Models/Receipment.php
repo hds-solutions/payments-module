@@ -1,9 +1,9 @@
 <?php
 
-namespace HDSSolutions\Finpar\Models;
+namespace HDSSolutions\Laravel\Models;
 
-use HDSSolutions\Finpar\Traits\HasDocumentActions;
-use HDSSolutions\Finpar\Traits\HasPartnerable;
+use HDSSolutions\Laravel\Traits\HasDocumentActions;
+use HDSSolutions\Laravel\Traits\HasPartnerable;
 
 class Receipment extends X_Receipment {
     use HasDocumentActions,

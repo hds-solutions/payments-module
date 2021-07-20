@@ -1,17 +1,17 @@
 <?php
 
-namespace HDSSolutions\Finpar;
+namespace HDSSolutions\Laravel;
 
 use HDSSolutions\Laravel\Modules\ModuleServiceProvider;
 
 class PaymentsModuleServiceProvider extends ModuleServiceProvider {
 
     protected array $middlewares = [
-        \HDSSolutions\Finpar\Http\Middleware\PaymentsMenu::class,
+        \HDSSolutions\Laravel\Http\Middleware\PaymentsMenu::class,
     ];
 
     private $commands = [
-        // \HDSSolutions\Finpar\Commands\SomeCommand::class,
+        // \HDSSolutions\Laravel\Commands\SomeCommand::class,
     ];
 
     public function bootEnv():void {

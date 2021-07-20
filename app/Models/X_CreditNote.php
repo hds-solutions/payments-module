@@ -1,8 +1,8 @@
 <?php
 
-namespace HDSSolutions\Finpar\Models;
+namespace HDSSolutions\Laravel\Models;
 
-use HDSSolutions\Finpar\Traits\ExtendsPayment;
+use HDSSolutions\Laravel\Traits\ExtendsPayment;
 use Illuminate\Database\Eloquent\Builder;
 
 abstract class X_CreditNote extends Base\Model {
