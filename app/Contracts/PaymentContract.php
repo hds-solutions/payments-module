@@ -1,6 +1,6 @@
 <?php
 
-namespace HDSSolutions\Finpar\Contracts;
+namespace HDSSolutions\Laravel\Contracts;
 
 interface PaymentContract {
 
