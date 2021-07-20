@@ -1,8 +1,8 @@
 <?php
 
-namespace HDSSolutions\Finpar\DataTables;
+namespace HDSSolutions\Laravel\DataTables;
 
-use HDSSolutions\Finpar\Models\Check as Resource;
+use HDSSolutions\Laravel\Models\Check as Resource;
 use Yajra\DataTables\Html\Column;
 
 class CheckDataTable extends Base\DataTable {

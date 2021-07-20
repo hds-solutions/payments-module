@@ -1,8 +1,8 @@
 <?php
 
-namespace HDSSolutions\Finpar\DataTables;
+namespace HDSSolutions\Laravel\DataTables;
 
-use HDSSolutions\Finpar\Models\CreditNote as Resource;
+use HDSSolutions\Laravel\Models\CreditNote as Resource;
 use Yajra\DataTables\Html\Column;
 
 class CreditNoteDataTable extends Base\DataTable {

@@ -3,7 +3,7 @@
 namespace HDSSolutions\Laravel;
 
 use HDSSolutions\Laravel\Modules\ModuleServiceProvider;
-use HDSSolutions\Finpar\Models\Payment;
+use HDSSolutions\Laravel\Models\Payment;
 
 class PaymentsModuleServiceProvider extends ModuleServiceProvider {
 

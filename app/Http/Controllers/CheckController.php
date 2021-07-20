@@ -3,9 +3,9 @@
 namespace HDSSolutions\Laravel\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use HDSSolutions\Finpar\DataTables\CheckDataTable as DataTable;
-use HDSSolutions\Finpar\Http\Request;
-use HDSSolutions\Finpar\Models\Check as Resource;
+use HDSSolutions\Laravel\DataTables\CheckDataTable as DataTable;
+use HDSSolutions\Laravel\Http\Request;
+use HDSSolutions\Laravel\Models\Check as Resource;
 
 class CheckController extends Controller {
 
