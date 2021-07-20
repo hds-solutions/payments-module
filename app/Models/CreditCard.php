@@ -2,6 +2,6 @@
 
 namespace HDSSolutions\Laravel\Models;
 
-class Check extends X_Check {
+class CreditCard extends X_CreditCard {
 
 }

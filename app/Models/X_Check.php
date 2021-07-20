@@ -1,9 +1,9 @@
 <?php
 
-namespace HDSSolutions\Finpar\Models;
+namespace HDSSolutions\Laravel\Models;
 
-use HDSSolutions\Finpar\Contracts\PaymentContract;
-use HDSSolutions\Finpar\Traits\ExtendsPayment;
+use HDSSolutions\Laravel\Contracts\PaymentContract;
+use HDSSolutions\Laravel\Traits\ExtendsPayment;
 
 abstract class X_Check extends Base\Model implements PaymentContract {
     use ExtendsPayment;

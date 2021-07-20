@@ -1,8 +1,8 @@
 <?php
 
-namespace HDSSolutions\Finpar\Models;
+namespace HDSSolutions\Laravel\Models;
 
-use HDSSolutions\Finpar\Traits\HasPartnerable;
+use HDSSolutions\Laravel\Traits\HasPartnerable;
 
 class Payment extends X_Payment {
     use HasPartnerable;

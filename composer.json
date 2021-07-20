@@ -1,5 +1,5 @@
 {
-    "name": "finpar/payments-module",
+    "name": "hds-solutions/payments-module",
     "description": "Payments module",
     "type": "laravel-module",
     "license": "GNU GPLv3",
@@ -17,8 +17,8 @@
     },
     "autoload": {
         "psr-4": {
-            "HDSSolutions\\Finpar\\": "app/",
-            "HDSSolutions\\Finpar\\Seeders\\": "database/seeders/"
+            "HDSSolutions\\Laravel\\": "app/",
+            "HDSSolutions\\Laravel\\Seeders\\": "database/seeders/"
         },
         "files": [
             "app/helpers.php"
@@ -27,10 +27,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "HDSSolutions\\Finpar\\PaymentsModuleServiceProvider"
+                "HDSSolutions\\Laravel\\PaymentsModuleServiceProvider"
             ],
             "aliases": {
-                "Payments": "HDSSolutions\\Finpar\\Payments\\Facade"
+                "Payments": "HDSSolutions\\Laravel\\Payments\\Facade"
             }
         }
     }
