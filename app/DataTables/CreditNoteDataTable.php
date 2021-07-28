@@ -3,13 +3,23 @@
 namespace HDSSolutions\Laravel\DataTables;
 
 use HDSSolutions\Laravel\Models\CreditNote as Resource;
+use HDSSolutions\Laravel\Models\Customer;
+use HDSSolutions\Laravel\Traits\DatatableWithPartnerable;
+use HDSSolutions\Laravel\Traits\DatatableExtendsFromPayment;
+use Illuminate\Database\Eloquent\Builder;
 use Yajra\DataTables\Html\Column;
 
 class CreditNoteDataTable extends Base\DataTable {
+    use DatatableWithPartnerable;
+    use DatatableExtendsFromPayment;
 
     protected array $with = [
         'partnerable',
         'currency',
+    ];
+
+    protected array $orderBy = [
+        'transacted_at'     => 'desc',
     ];
 
     public function __construct() {
@@ -25,9 +35,12 @@ class CreditNoteDataTable extends Base\DataTable {
                 ->title( __('payments::credit_note.id.0') )
                 ->hidden(),
 
-            Column::computed('transacted_at')
+            Column::make('transacted_at')
                 ->title( __('payments::credit_note.transacted_at.0') )
                 ->renderRaw('datetime:transacted_at;F j, Y H:i'),
+
+            Column::make('document_number')
+                ->title( __('payments::credit_note.document_number.0') ),
 
             Column::make('description')
                 ->title( __('payments::credit_note.description.0') ),
@@ -45,8 +58,25 @@ class CreditNoteDataTable extends Base\DataTable {
                 ->renderRaw('view:credit_note')
                 ->data( view('payments::credit_notes.datatable.used_amount')->render() ),
 
-            Column::make('actions'),
+            Column::computed('actions'),
         ];
+    }
+
+    protected function joins(Builder $query):Builder {
+        // add custom JOIN to customers + people for Partnerable
+        return $query
+            // join to Payment
+            ->join('payments', fn($payments) => $payments
+                ->on('payments.id', '=', 'credit_notes.id')
+                ->where('payments.company_id', '=', backend()->company()->id)
+            )
+                // join to partnerable
+                ->leftJoin('customers', fn($customers) => $customers
+                    ->on('payments.partnerable_id', '=', 'customers.id')
+                    ->where('payments.partnerable_type', '=', Customer::class)
+                )
+                    // join to people
+                    ->join('people', 'people.id', 'customers.id');
     }
 
 }

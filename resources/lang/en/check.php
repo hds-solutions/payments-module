@@ -6,6 +6,12 @@
         '?' => 'Date help text',
     ],
 
+    'document_number' => [
+        'Document number',
+        '_' => 'Document number',
+        '?' => 'Document number help text',
+    ],
+
     'bank_name'  => [
         'Bank Name',
         '_' => 'Bank Name',

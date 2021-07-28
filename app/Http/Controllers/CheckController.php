@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use HDSSolutions\Laravel\DataTables\CheckDataTable as DataTable;
 use HDSSolutions\Laravel\Http\Request;
 use HDSSolutions\Laravel\Models\Check as Resource;
+use HDSSolutions\Laravel\Models\Customer;
 
 class CheckController extends Controller {
 
@@ -14,11 +15,6 @@ class CheckController extends Controller {
         $this->authorizeResource(Resource::class, 'resource');
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request, DataTable $dataTable) {
         // check only-form flag
         if ($request->has('only-form'))
@@ -28,100 +24,24 @@ class CheckController extends Controller {
         // load resources
         if ($request->ajax()) return $dataTable->ajax();
 
+        // load customers
+        $customers = Customer::all();
+
         // return view with dataTable
-        return $dataTable->render('payments::checks.index', [ 'count' => Resource::count() ]);
+        return $dataTable->render('payments::checks.index', compact('customers') + [
+            'count'                 => Resource::count(),
+            'show_company_selector' => !backend()->companyScoped(),
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create() {
-        // show create form
-        return view('payments::checks.create');
-    }
+    public function show(Request $request, Resource $resource) {
+        // load resource relations
+        $resource->load([
+            'partnerable',
+        ]);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request) {
-        // create resource
-        $resource = new Resource( $request->input() );
-
-        // save resource
-        if (!$resource->save())
-            // redirect with errors
-            return back()
-                ->withErrors( $resource->errors() )
-                ->withInput();
-
-        // redirect to list
-        return redirect()->route('backend.checks');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Resource  $resource
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Resource $resource) {
-        // redirect to list
-        return redirect()->route('backend.checks');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Resource  $resource
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Resource $resource) {
-        // show edit form
-        return view('payments::checks.edit', compact('resource'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Resource  $resource
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id) {
-        // find resource
-        $resource = Resource::findOrFail($id);
-
-        // save resource
-        if (!$resource->update( $request->input() ))
-            // redirect with errors
-            return back()
-                ->withErrors( $resource->errors() )
-                ->withInput();
-
-        // redirect to list
-        return redirect()->route('backend.checks');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Resource  $resource
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id) {
-        // find resource
-        $resource = Resource::findOrFail($id);
-        // delete resource
-        if (!$resource->delete())
-            // redirect with errors
-            return back();
-        // redirect to list
-        return redirect()->route('backend.checks');
+        // show check details
+        return view('payments::checks.show', compact('resource'));
     }
 
 }

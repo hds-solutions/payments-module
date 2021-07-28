@@ -11,7 +11,7 @@ class PaymentsMenu extends Base\Menu {
         // create a submenu
         $sub = backend()->menu()
             ->add(__('payments::payments.nav'), [
-                'icon'  => 'cogs',
+                'icon'  => 'hand-holding-usd',
             ])->data('priority', 700);
 
         $this
@@ -28,7 +28,7 @@ class PaymentsMenu extends Base\Menu {
         if (Route::has('backend.checks') && $this->can('checks'))
             $menu->add(__('payments::checks.nav'), [
                 'route'     => 'backend.checks',
-                'icon'      => 'checks'
+                'icon'      => 'signature'
             ]);
 
         return $this;
@@ -38,7 +38,7 @@ class PaymentsMenu extends Base\Menu {
         if (Route::has('backend.credit_notes') && $this->can('credit_notes'))
             $menu->add(__('payments::credit_notes.nav'), [
                 'route'     => 'backend.credit_notes',
-                'icon'      => 'credit_notes'
+                'icon'      => 'money-check-alt'
             ]);
 
         return $this;

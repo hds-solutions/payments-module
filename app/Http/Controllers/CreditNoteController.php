@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use HDSSolutions\Laravel\DataTables\CreditNoteDataTable as DataTable;
 use HDSSolutions\Laravel\Http\Request;
 use HDSSolutions\Laravel\Models\CreditNote as Resource;
+use HDSSolutions\Laravel\Models\Customer;
 
 class CreditNoteController extends Controller {
 
@@ -14,11 +15,6 @@ class CreditNoteController extends Controller {
         $this->authorizeResource(Resource::class, 'resource');
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request, DataTable $dataTable) {
         // check only-form flag
         if ($request->has('only-form'))
@@ -28,26 +24,21 @@ class CreditNoteController extends Controller {
         // load resources
         if ($request->ajax()) return $dataTable->ajax();
 
+        // load customers
+        $customers = Customer::all();
+
         // return view with dataTable
-        return $dataTable->render('payments::credit_notes.index', [ 'count' => Resource::count() ]);
+        return $dataTable->render('payments::credit_notes.index', compact('customers') + [
+            'count'                 => Resource::count(),
+            'show_company_selector' => !backend()->companyScoped(),
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create() {
+    public function create(Request $request) {
         // show create form
         return view('payments::credit_notes.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request) {
         // create resource
         $resource = new Resource( $request->input() );
@@ -55,71 +46,41 @@ class CreditNoteController extends Controller {
         // save resource
         if (!$resource->save())
             // redirect with errors
-            return back()
-                ->withErrors( $resource->errors() )
-                ->withInput();
+            return back()->withInput()
+                ->withErrors( $resource->errors() );
 
         // redirect to list
         return redirect()->route('backend.credit_notes');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Resource  $resource
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Resource $resource) {
+    public function show(Request $request, Resource $resource) {
         // redirect to list
         return redirect()->route('backend.credit_notes');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Resource  $resource
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Resource $resource) {
+    public function edit(Request $request, Resource $resource) {
         // show edit form
         return view('payments::credit_notes.edit', compact('resource'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Resource  $resource
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id) {
-        // find resource
-        $resource = Resource::findOrFail($id);
-
+    public function update(Request $request, Resource $resource) {
         // save resource
         if (!$resource->update( $request->input() ))
             // redirect with errors
-            return back()
-                ->withErrors( $resource->errors() )
-                ->withInput();
+            return back()->withInput()
+                ->withErrors( $resource->errors() );
 
         // redirect to list
         return redirect()->route('backend.credit_notes');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Resource  $resource
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id) {
-        // find resource
-        $resource = Resource::findOrFail($id);
+    public function destroy(Request $request, Resource $resource) {
         // delete resource
         if (!$resource->delete())
             // redirect with errors
-            return back();
+            return back()
+                ->withErrors( $resource->errors() );
+
         // redirect to list
         return redirect()->route('backend.credit_notes');
     }

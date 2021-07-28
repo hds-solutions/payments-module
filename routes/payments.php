@@ -14,6 +14,7 @@ Route::group([
     $name_prefix = [ 'as' => 'backend' ];
 
     Route::resource('checks',           CheckController::class,    $name_prefix)
+        ->only([ 'index', 'show' ])
         ->parameters([ 'checks' => 'resource' ])
         ->name('index', 'backend.checks');
 
