@@ -65,18 +65,13 @@ class CreditNoteDataTable extends Base\DataTable {
     protected function joins(Builder $query):Builder {
         // add custom JOIN to customers + people for Partnerable
         return $query
-            // join to Payment
-            ->join('payments', fn($payments) => $payments
-                ->on('payments.id', '=', 'credit_notes.id')
-                ->where('payments.company_id', '=', backend()->company()->id)
+            // join to partnerable
+            ->join('customers', fn($customers) => $customers
+                ->on('payments.partnerable_id', '=', 'customers.id')
+                ->where('payments.partnerable_type', '=', Customer::class)
             )
-                // join to partnerable
-                ->leftJoin('customers', fn($customers) => $customers
-                    ->on('payments.partnerable_id', '=', 'customers.id')
-                    ->where('payments.partnerable_type', '=', Customer::class)
-                )
-                    // join to people
-                    ->join('people', 'people.id', 'customers.id');
+                // join to people
+                ->join('people', 'people.id', 'customers.id');
     }
 
 }

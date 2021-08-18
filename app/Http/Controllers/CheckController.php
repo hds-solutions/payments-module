@@ -4,6 +4,7 @@ namespace HDSSolutions\Laravel\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use HDSSolutions\Laravel\DataTables\CheckDataTable as DataTable;
+use HDSSolutions\Laravel\DataTables\CheckWalletDataTable;
 use HDSSolutions\Laravel\Http\Request;
 use HDSSolutions\Laravel\Models\Check as Resource;
 use HDSSolutions\Laravel\Models\Customer;
@@ -32,6 +33,11 @@ class CheckController extends Controller {
             'count'                 => Resource::count(),
             'show_company_selector' => !backend()->companyScoped(),
         ]);
+    }
+
+    public function wallet(Request $request, CheckWalletDataTable $dataTable) {
+        // return index list but with custom datatable
+        return $this->index($request, $dataTable);
     }
 
     public function show(Request $request, Resource $resource) {

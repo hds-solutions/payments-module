@@ -13,6 +13,9 @@ Route::group([
     // name prefix
     $name_prefix = [ 'as' => 'backend' ];
 
+    Route::get('checks/wallet',             [ CheckController::class, 'wallet' ])
+        ->name('backend.checks.wallet');
+    Route::get('checks/wallet/{resource}',  [ CheckController::class, 'show' ]);
     Route::resource('checks',           CheckController::class,    $name_prefix)
         ->only([ 'index', 'show' ])
         ->parameters([ 'checks' => 'resource' ])

@@ -8,7 +8,7 @@ class CreditNote extends X_CreditNote {
 
     public static function nextDocumentNumber():string {
         // return next document number
-        return str_increment(self::join('payments', 'payments.id', 'credit_notes.id')->max('document_number') ?? null);
+        return str_increment(self::withTrashed()->max('document_number') ?? null);
     }
 
     public function __construct(array|MaterialReturn $attributes = []) {

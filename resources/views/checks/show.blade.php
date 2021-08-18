@@ -42,13 +42,8 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-4 col-lg-4">@lang('payments::check.bank_name.0'):</div>
-                    <div class="col-8 col-lg-6 h4">{{ $resource->bank_name }}</div>
-                </div>
-
-                <div class="row">
-                    <div class="col-4 col-lg-4">@lang('payments::check.bank_account.0'):</div>
-                    <div class="col-8 col-lg-6 h4">{{ $resource->bank_account }}</div>
+                    <div class="col-4 col-lg-4">@lang('payments::check.bank_id.0'):</div>
+                    <div class="col-8 col-lg-6 h4">{{ $resource->bank->name }}</div>
                 </div>
 
                 <div class="row">
@@ -61,20 +56,27 @@
                     <div class="col-8 col-lg-6 h4">{{ $resource->account_holder }}</div>
                 </div>
 
-                {{-- <div class="row">
-                    <div class="col-4 col-lg-4">@lang('payments::check.currency_id.0'):</div>
-                    <div class="col-8 col-lg-6 h4">{{ currency($resource->currency_id)->name }}</div>
-                </div> --}}
+                <div class="row">
+                    <div class="col-4 col-lg-4">@lang('payments::check.due_date.0'):</div>
+                    <div class="col-8 col-lg-6 h4">{{ pretty_date($resource->due_date) }}</div>
+                </div>
 
                 <div class="row">
                     <div class="col-4">@lang('payments::check.payment_amount.0'):</div>
                     <div class="col-8 col-lg-6 h4">{{ currency($resource->currency_id)->code }} <b>{{ number($resource->payment_amount, currency($resource->currency_id)->decimals) }}</b></div>
                 </div>
 
+                @if ($resource->is_deposited)
                 <div class="row">
-                    <div class="col-4 col-lg-4">@lang('payments::check.due_date.0'):</div>
-                    <div class="col-8 col-lg-6 h4">{{ pretty_date($resource->due_date) }}</div>
+                    <div class="col-4 col-lg-4">@lang('payments::check.bank_account_id.0'):</div>
+                    <div class="col-8 col-lg-6 h4">{{ $resource->bankAccount->account_number }} <small class="font-weight-light">[{{ $resource->bankAccount->bank->name }}]</small></div>
                 </div>
+                @endif
+
+                {{-- <div class="row">
+                    <div class="col-4 col-lg-4">@lang('payments::check.currency_id.0'):</div>
+                    <div class="col-8 col-lg-6 h4">{{ currency($resource->currency_id)->name }}</div>
+                </div> --}}
 
             </div>
         </div>

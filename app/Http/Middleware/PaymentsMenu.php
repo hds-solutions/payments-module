@@ -17,6 +17,7 @@ class PaymentsMenu extends Base\Menu {
         $this
             // append items to submenu
             ->checks($sub)
+            ->wallet_checks($sub)
             ->credit_notes($sub)
             ;
 
@@ -28,6 +29,16 @@ class PaymentsMenu extends Base\Menu {
         if (Route::has('backend.checks') && $this->can('checks'))
             $menu->add(__('payments::checks.nav'), [
                 'route'     => 'backend.checks',
+                'icon'      => 'signature'
+            ]);
+
+        return $this;
+    }
+
+    private function wallet_checks(&$menu) {
+        if (Route::has('backend.checks.wallet') && $this->can('checks'))
+            $menu->add(__('payments::checks.wallet'), [
+                'route'     => 'backend.checks.wallet',
                 'icon'      => 'signature'
             ]);
 

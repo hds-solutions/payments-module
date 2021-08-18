@@ -1,6 +1,7 @@
 <?php return [
 
     'nav'           => 'Checks',
+    'wallet'        => 'Checks in Wallet',
 
     'title'         => 'Checks',
     'description'   => 'Checks description',

@@ -38,13 +38,14 @@ class CreatePaymentsTable extends Migration {
         // create Check table
         $schema->create('checks', function(Blueprint $table) {
             $table->foreignTo('Payment', 'id')->primary();
-            $table->string('bank_name');
-            $table->string('bank_account');
+            $table->foreignTo('Bank');
             $table->string('account_holder');
             $table->timestamp('due_date')->useCurrent();
             $table->boolean('is_deposited')->default(false);
-            // $table->foreignTo('Bank')->nullable();
-            // $table->foreignTo('BankAccount')->nullable();
+            $table->foreignTo('BankAccount')->nullable();
+            $table->boolean('is_cashed')->default(false);
+            $table->foreignTo('Cash')->nullable();
+            $table->boolean('is_paid')->default(false);
         });
 
         // create CreditNote table

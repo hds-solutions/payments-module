@@ -50,12 +50,12 @@
             <div class="text-center m-t-30 m-b-30 p-b-10">
                 <h2><i class="fas fa-table text-custom"></i></h2>
                 <h3>@lang('backend.empty.title')</h3>
-                <p class="text-muted">
+                {{-- <p class="text-muted">
                     @lang('backend.empty.description')
                     <a href="{{ route('backend.checks.create') }}" class="text-custom">
                         <ins>@lang('payments::checks.create')</ins>
                     </a>
-                </p>
+                </p> --}}
             </div>
         @endif
     </div>

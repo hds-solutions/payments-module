@@ -11,29 +11,44 @@ abstract class X_Check extends Base\Model implements PaymentContract {
     public $incrementing = false;
 
     protected $fillable = [
-        'bank_name',
-        'bank_account',
+        'bank_id',
         'account_holder',
         'due_date',
         'is_deposited',
+        'bank_account_id',
+        'is_cashed',
+        'cash_id',
+        'is_paid',
     ];
 
     protected $with = [ 'identity' ];
 
     protected $attributes = [
         'is_deposited'  => false,
+        'is_cashed'     => false,
+        'is_paid'       => false,
+    ];
+
+    protected $casts = [
+        'due_date'      => 'datetime',
+        'is_deposited'  => 'boolean',
+        'is_cashed'     => 'boolean',
+        'is_paid'       => 'boolean',
     ];
 
     protected static array $rules = [
-        'bank_name'         => [ 'required' ],
-        'bank_account'      => [ 'required' ],
+        'bank_id'           => [ 'required' ],
         'account_holder'    => [ 'required' ],
         'due_date'          => [ 'required', 'date', 'after:today' ],
         'is_deposited'      => [ 'sometimes', 'boolean' ],
+        'bank_account_id'   => [ 'sometimes', 'nullable' ],
+        'is_cashed'         => [ 'sometimes', 'boolean' ],
+        'cash_id'           => [ 'sometimes', 'nullable' ],
+        'is_paid'           => [ 'sometimes', 'boolean' ],
     ];
 
-    public function isDeposited():bool {
-        return $this->is_deposited;
+    public function getIsExpiredAttribute():bool {
+        return $this->due_date < now();
     }
 
 }

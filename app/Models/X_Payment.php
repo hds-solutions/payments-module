@@ -40,4 +40,8 @@ abstract class X_Payment extends Base\Model {
         'payment_amount'    => [ 'required', 'min:0' ],
     ];
 
+    public function getPaymentAmountPrettyAttribute():string {
+        return amount($this->payment_amount, $this->currency_id);
+    }
+
 }

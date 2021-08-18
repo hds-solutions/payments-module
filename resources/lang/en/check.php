@@ -1,5 +1,11 @@
 <?php return [
 
+    'details' => [
+        'Details',
+        '_' => 'Details',
+        '?' => 'Details help text',
+    ],
+
     'transacted_at' => [
         'Date',
         '_' => 'Date',
@@ -12,16 +18,16 @@
         '?' => 'Document number help text',
     ],
 
-    'bank_name'  => [
-        'Bank Name',
-        '_' => 'Bank Name',
-        '?' => 'Bank Name help text',
+    'bank_id'  => [
+        'Bank',
+        '_' => 'Bank',
+        '?' => 'Bank help text',
     ],
 
-    'bank_account'  => [
-        'Bank Account',
-        '_' => 'Bank Account',
-        '?' => 'Bank Account help text',
+    'bank_account_id'   => [
+        'Deposited on',
+        '_' => 'Deposited on',
+        '?' => 'Deposited on help text',
     ],
 
     'account_holder'  => [
@@ -36,7 +42,7 @@
         '?' => 'Due Date help text',
     ],
 
-    'partnerable_id'=> [
+    'partnerable_id'    => [
         'Partner',
         '_' => 'Partner',
         '?' => 'Partner help text',
@@ -46,6 +52,24 @@
         'Amount',
         '_' => 'Amount',
         '?' => 'Amount help text',
+    ],
+
+    'is_deposited'      => [
+        'Deposited',
+        '_' => 'Deposited',
+        '?' => 'Deposited help text',
+    ],
+
+    'is_cashed'      => [
+        'Cashed',
+        '_' => 'Cashed',
+        '?' => 'Cashed help text',
+    ],
+
+    'is_paid'      => [
+        'Paid',
+        '_' => 'Paid',
+        '?' => 'Paid help text',
     ],
 
 ];

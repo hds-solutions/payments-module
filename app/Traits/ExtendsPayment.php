@@ -4,6 +4,9 @@ namespace HDSSolutions\Laravel\Traits;
 
 use HDSSolutions\Laravel\Models\Payment;
 use HDSSolutions\Laravel\Traits\HasPartnerable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Scope;
 
 trait ExtendsPayment {
     use HasIdentity,
@@ -11,7 +14,41 @@ trait ExtendsPayment {
 
     protected static $identityClass = Payment::class;
 
+    public function getRouteKeyName() {
+        // return key name with table (JOIN makes ambiguous id fields)
+        return $this->getTable().'.'.$this->getKeyName();
+    }
+
+    public function getRouteKey() {
+        // return model key value
+        return $this->getAttribute($this->getKeyName());
+    }
+
+    public function newModelQuery() {
+        // get original modelQuery
+        return parent::newModelQuery()
+            // always JOIN to payments
+            ->join('payments', 'payments.id', $this->getTable().'.'.$this->getKeyName());
+    }
+
+    public function scopeJoinedPayment(Builder $query) {
+        return $query->join('payments', 'payments.id', $this->getTable().'.'.$this->getKeyName());
+    }
+
+    protected function setKeysForSaveQuery($query) {
+        // add table name to column (JOIN makes mabiguois id fields)
+        return $query->where($this->getTable().'.'.$this->getKeyName(), $this->getKeyForSaveQuery());
+    }
+
     public static function bootExtendsPayment() {
+        // add scope lo load payments from company only
+        self::addGlobalScope(new class implements Scope {
+            public function apply(Builder $query, Model $model) {
+                // filter company ID on payments table
+                return $query->where('payments.company_id', backend()->company()?->id);
+            }
+        });
+
         self::retrieved(function($model) {
             // append identity fields
             $model->appends += [
@@ -82,12 +119,20 @@ trait ExtendsPayment {
         return $this->identity->transacted_at;
     }
 
+    public function getTransactedAtPrettyAttribute():string {
+        return pretty_date($this->identity->transacted_at, true);
+    }
+
     public function setTransactedAtAttribute($value) {
         $this->identity->transacted_at = $value;
     }
 
     public function getPaymentAmountAttribute() {
         return $this->identity->payment_amount;
+    }
+
+    public function getPaymentAmountPrettyAttribute() {
+        return $this->identity->payment_amount_pretty;
     }
 
     public function setPaymentAmountAttribute($value) {
