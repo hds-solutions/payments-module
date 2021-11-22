@@ -4,7 +4,7 @@
     'wallet'        => 'Checks in Wallet',
 
     'title'         => 'Checks',
-    'description'   => 'Checks description',
+    'description'   => '',
 
     'index'         => 'Checks list',
     'create'        => 'Create new Check',
@@ -13,7 +13,6 @@
     'edit'          => 'Edit Check',
 
     'save'          => 'Save',
-    'save-create'   => 'Save & Import Lines',
     'cancel'        => 'Cancel',
 
 ];

@@ -19,6 +19,12 @@
         'card'          => 'Card',
     ],
 
+    'document_number' => [
+        'Document number',
+        '_' => 'Document number',
+        '?' => 'Document number help text',
+    ],
+
     'payment_amount'    => [
         'Payment amount',
         '_' => 'Payment amount',

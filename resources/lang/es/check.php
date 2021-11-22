@@ -1,9 +1,9 @@
 <?php return [
 
     'details' => [
-        'Details',
-        '_' => 'Details',
-        '?' => 'Details help text',
+        'Detalles',
+        '_' => 'Detalles',
+        '?' => 'Detalles help text',
     ],
 
     'transacted_at' => [
@@ -43,9 +43,9 @@
     ],
 
     'partnerable_id'    => [
-        'Partner',
-        '_' => 'Partner',
-        '?' => 'Partner help text',
+        'Entidad',
+        '_' => 'Entidad',
+        '?' => 'Entidad help text',
     ],
 
     'payment_amount'    => [

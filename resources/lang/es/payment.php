@@ -19,6 +19,12 @@
         'card'          => 'Tarjeta',
     ],
 
+    'document_number' => [
+        'Número de documento',
+        '_' => 'Número de documento',
+        '?' => 'Número de documento help text',
+    ],
+
     'payment_amount'    => [
         'Monto del Pago',
         '_' => 'Monto del Pago',
