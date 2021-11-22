@@ -31,40 +31,45 @@ class CreatePaymentsTable extends Migration {
         // create Credit table
         $schema->create('credits', function(Blueprint $table) {
             $table->foreignTo('Payment', 'id')->primary();
+            $table->unsignedDecimal('interest')->default(0);
+            $table->unsignedTinyInteger('dues')->default(1);
         });
 
         // create Check table
         $schema->create('checks', function(Blueprint $table) {
             $table->foreignTo('Payment', 'id')->primary();
-            $table->string('bank_name');
-            $table->string('bank_account');
+            $table->foreignTo('Bank');
             $table->string('account_holder');
-            $table->timestamp('due_date');
+            $table->timestamp('due_date')->useCurrent();
             $table->boolean('is_deposited')->default(false);
-            // $table->foreignTo('Bank')->nullable();
-            // $table->foreignTo('BankAccount')->nullable();
+            $table->foreignTo('BankAccount')->nullable();
+            $table->boolean('is_cashed')->default(false);
+            $table->foreignTo('Cash')->nullable();
+            $table->boolean('is_paid')->default(false);
         });
 
         // create CreditNote table
         $schema->create('credit_notes', function(Blueprint $table) {
             $table->foreignTo('Payment', 'id')->primary();
             $table->morphable('document')->nullable();
+            $table->string('description');
             $table->amount('used_amount')->default(0);
+            $table->boolean('is_used')->default(false);
             $table->boolean('is_paid')->default(false);
         });
 
         // create PromissoryNote table
         $schema->create('promissory_notes', function(Blueprint $table) {
             $table->foreignTo('Payment', 'id')->primary();
-            $table->timestamp('due_date');
+            $table->timestamp('due_date')->useCurrent();
             $table->boolean('is_paid')->default(false);
         });
 
-        // create CreditCard table
-        $schema->create('credit_cards', function(Blueprint $table) {
+        // create Card table
+        $schema->create('cards', function(Blueprint $table) {
             $table->foreignTo('Payment', 'id')->primary();
-            $table->string('card_holder');
-            $table->string('card_number', 4);
+            $table->string('card_holder')->nullable();
+            $table->string('is_credit')->default(false);
         });
     }
 

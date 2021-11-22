@@ -3,7 +3,6 @@
 namespace HDSSolutions\Laravel\Models;
 
 use HDSSolutions\Laravel\Traits\BelongsToCompany;
-use Illuminate\Database\Eloquent\Builder;
 
 abstract class X_Receipment extends Base\Model {
     use BelongsToCompany;
@@ -18,6 +17,11 @@ abstract class X_Receipment extends Base\Model {
         'is_purchase',
     ];
 
+    protected $appends = [
+        'invoices_amount',
+        'payments_amount',
+    ];
+
     protected static array $rules = [
         'employee_id'       => [ 'required' ],
         'partnerable_type'  => [ 'required' ],
@@ -29,6 +33,22 @@ abstract class X_Receipment extends Base\Model {
 
     public function isPurchase():bool {
         return $this->is_purchase;
+    }
+
+    public function getInvoicesAmountAttribute() {
+        return $this->invoices->sum('receipmentInvoice.imputed_amount');
+    }
+
+    public function getPaymentsAmountAttribute() {
+        return $this->payments->sum('receipmentPayment.used_amount');
+    }
+
+    public function getPaymentsNetAmountAttribute() {
+        return $this->payments->sum('receipmentPayment.payment_amount');
+    }
+
+    public function getTransactedAtPrettyAttribute():string {
+        return pretty_date($this->transacted_at, true);
     }
 
 }
