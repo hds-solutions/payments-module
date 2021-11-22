@@ -68,7 +68,7 @@ class CreatePaymentsTable extends Migration {
         // create Card table
         $schema->create('cards', function(Blueprint $table) {
             $table->foreignTo('Payment', 'id')->primary();
-            $table->string('card_holder');
+            $table->string('card_holder')->nullable();
             $table->string('is_credit')->default(false);
         });
     }

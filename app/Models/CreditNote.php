@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Builder;
 
 class CreditNote extends X_CreditNote {
 
-    public static function nextDocumentNumber():string {
+    public static function nextDocumentNumber():?string {
         // return next document number
-        return str_increment(self::withTrashed()->max('document_number') ?? null);
+        return str_increment(self::withTrashed()->max('document_number'));
     }
 
     public function __construct(array|MaterialReturn $attributes = []) {
@@ -24,7 +24,7 @@ class CreditNote extends X_CreditNote {
             'currency_id'       => $materialReturn->invoice->currency_id,
             'partnerable_type'  => $materialReturn->partnerable_type,
             'partnerable_id'    => $materialReturn->partnerable_id,
-            'document_number'   => self::nextDocumentNumber(),
+            'document_number'   => self::nextDocumentNumber() ?? '000001',
             'transacted_at'     => $materialReturn->transacted_at,
             'description'       => __('payments::credit_note.material-return', [
                 'document_number'   => $materialReturn->invoice->document_number,

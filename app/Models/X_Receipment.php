@@ -40,6 +40,10 @@ abstract class X_Receipment extends Base\Model {
     }
 
     public function getPaymentsAmountAttribute() {
+        return $this->payments->sum('receipmentPayment.used_amount');
+    }
+
+    public function getPaymentsNetAmountAttribute() {
         return $this->payments->sum('receipmentPayment.payment_amount');
     }
 

@@ -26,7 +26,7 @@ class PaymentsMenu extends Base\Menu {
     }
 
     private function checks(&$menu) {
-        if (Route::has('backend.checks') && $this->can('checks'))
+        if (Route::has('backend.checks') && $this->can('checks.crud.index'))
             $menu->add(__('payments::checks.nav'), [
                 'route'     => 'backend.checks',
                 'icon'      => 'signature'
@@ -36,7 +36,7 @@ class PaymentsMenu extends Base\Menu {
     }
 
     private function wallet_checks(&$menu) {
-        if (Route::has('backend.checks.wallet') && $this->can('checks'))
+        if (Route::has('backend.checks.wallet') && $this->can('checks.crud.index'))
             $menu->add(__('payments::checks.wallet'), [
                 'route'     => 'backend.checks.wallet',
                 'icon'      => 'signature'
@@ -46,7 +46,7 @@ class PaymentsMenu extends Base\Menu {
     }
 
     private function credit_notes(&$menu) {
-        if (Route::has('backend.credit_notes') && $this->can('credit_notes'))
+        if (Route::has('backend.credit_notes') && $this->can('credit_notes.crud.index'))
             $menu->add(__('payments::credit_notes.nav'), [
                 'route'     => 'backend.credit_notes',
                 'icon'      => 'money-check-alt'
