@@ -36,4 +36,6 @@
         '?' => 'Monto Utilizado help text',
     ],
 
+    'material-return'   => 'Nota de Crédito generada por devolución de material de la factura :invoice',
+
 ];

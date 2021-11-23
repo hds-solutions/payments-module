@@ -36,4 +36,6 @@
         '?' => 'Used Amount help text',
     ],
 
+    'material-return'   => 'CreditNote generated from returning merchandise of invoice :invoice',
+
 ];

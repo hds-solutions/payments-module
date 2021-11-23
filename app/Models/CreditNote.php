@@ -27,7 +27,7 @@ class CreditNote extends X_CreditNote {
             'document_number'   => self::nextDocumentNumber() ?? '00000001',
             'transacted_at'     => $materialReturn->transacted_at,
             'description'       => __('payments::credit_note.material-return', [
-                'document_number'   => $materialReturn->invoice->document_number,
+                'invoice'   => $materialReturn->invoice->document_number,
             ]),
         ];
 
