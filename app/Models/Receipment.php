@@ -99,25 +99,25 @@ class Receipment extends X_Receipment implements Document {
         // check that there are invoices to pay
         if ($this->invoices()->count() === 0)
             // reject document with error
-            return $this->documentError('payments::receipments.no-invoices');
+            return $this->documentError('sales::receipment.prepareIt.no-invoices');
 
         // check that there are payments to apply
         if ($this->payments()->count() === 0)
             // reject document with error
-            return $this->documentError('payments::receipments.no-payments');
+            return $this->documentError('sales::receipment.prepareIt.no-payments');
 
         // check if there is an invoices already paid
         foreach ($this->invoices as $invoice) {
             // check that invoice is completed
             if (!$invoice->isCompleted)
                 // reject document with error
-                return $this->documentError('payments::receipments.invoice-not-completed', [
+                return $this->documentError('sales::receipment.prepareIt.invoice-not-completed', [
                     'invoice'   => $invoice->document_number,
                 ]);
             // check if invoice is already paid
             if ($invoice->is_paid)
                 // reject document with error
-                return $this->documentError('payments::receipments.invoice-already-paid', [
+                return $this->documentError('sales::receipment.prepareIt.invoice-already-paid', [
                     'invoice'   => $invoice->document_number,
                 ]);
         }
@@ -129,7 +129,7 @@ class Receipment extends X_Receipment implements Document {
         // check sum(payments.payment_amount) == sum(invoices.imputed_amount)
         if ($imputedAmount > $paymentsAmount)
             // reject document with error
-            return $this->documentError('payments::receipments.imputed-gt-payments', [
+            return $this->documentError('sales::receipment.prepareIt.imputed-gt-payments', [
                 'imputed_amount'    => $imputedAmount,
                 'payments_amount'   => $paymentsAmount,
             ]);
@@ -139,22 +139,22 @@ class Receipment extends X_Receipment implements Document {
         $this->invoices->each(fn($invoice) => $has_cash_invoices = $invoice->is_cash || $has_cash_invoices);
         if ($this->credits->count() > 0 && $has_cash_invoices)
             // reject document with error
-            return $this->documentError('payments::receipments.credit-with-cash-invoices');
+            return $this->documentError('sales::receipment.prepareIt.credit-with-cash-invoices');
 
         // check if there are credit payments
         if ($this->credits->count()) {
             // check if partner doesn't have credit enabled
             if (!$this->partnerable->has_credit_enabled)
                 // reject document with error
-                return $this->documentError('payments::receipments.partnerable-no-credit-enabled');
+                return $this->documentError('sales::receipment.prepareIt.partnerable-no-credit-enabled');
             // check if partner doesn't have enought credit available
             if ($this->partnerable->credit_available === 0)
                 // reject document with error
-                return $this->documentError('payments::receipments.partnerable-no-credit-available');
+                return $this->documentError('sales::receipment.prepareIt.partnerable-no-credit-available');
         }
 
         // return status InProgress
-        return Document::STATUS_InProgress;
+        return self::STATUS_InProgress;
     }
 
     public function completeIt():?string {
@@ -175,11 +175,11 @@ class Receipment extends X_Receipment implements Document {
                     if ($payment->payment_amount > $pendingAmount) {
                         // generate CreditNote for remaining check amount
                         $creditNote = CreditNote::make([
-                            'document_number'   => CreditNote::nextDocumentNumber() ?? '000001',
+                            'document_number'   => CreditNote::nextDocumentNumber() ?? '00000001',
                             'payment_amount'    => $amount = ($payment->payment_amount - $pendingAmount),
-                            'description'       => __('payments::credit_note.check-diff', [
-                                'document_number'   => $payment->document_number,
-                                'amount'            => $amount,
+                            'description'       => __('sales::receipment.completeIt.credit_note-check-diff', [
+                                'check'     => $payment->document_number,
+                                'amount'    => $amount,
                             ]),
                         ]);
                         $creditNote->currency()->associate( $payment->currency );
@@ -188,14 +188,14 @@ class Receipment extends X_Receipment implements Document {
                         // save CreditNote
                         if (!$creditNote->save())
                             // redirect error
-                            return $this->documentError( $creditNote->errors()->first() ?? 'payments::receipments.check-diff-credit-note-creation-failed' );
+                            return $this->documentError( $creditNote->errors()->first() ?? 'sales::receipment.completeIt.credit_note-check-diff-creation-failed' );
 
                         // link creditnote to current payment
                         if (!$this->checks()->updateExistingPivot($payment->id, [
                             'credit_note_id'    => $creditNote->id,
                         ]))
                             // reject document with error
-                            return $this->documentError('payments::receipments.payment-check-credit-note-failed');
+                            return $this->documentError('sales::receipment.completeIt.payment-check-associate-credit-note-failed');
 
                         // set pending amount to 0 (zero)
                         $pendingAmount = 0;
@@ -205,7 +205,7 @@ class Receipment extends X_Receipment implements Document {
             // save payment changes
             if (!$payment->save())
                 // redirect error
-                return $this->documentError( $payment->errors()->first() ?? 'payments::receipments.payment-update-failed' );
+                return $this->documentError( $payment->errors()->first() ?? 'sales::receipment.completeIt.payment-update-failed' );
 
             //
             $relation = match(get_class($payment)) {
@@ -224,7 +224,7 @@ class Receipment extends X_Receipment implements Document {
                     : $payment->receipmentPayment->payment_amount
             ]))
                 // reject document with error
-                return $this->documentError('payments::receipments.payment-update-failed');
+                return $this->documentError('sales::receipment.completeIt.payment-update-failed');
 
             // substract payment amount from pending payments amount
             $pendingAmount -= $payment->receipmentPayment->payment_amount;
@@ -239,16 +239,18 @@ class Receipment extends X_Receipment implements Document {
             // save invoice changes
             if (!$invoice->save())
                 // redirect error
-                return $this->documentError( $invoice->errors()->first() ?? 'payments::receipments.invoice-update-failed' );
+                return $this->documentError( $invoice->errors()->first() ?? __('sales::receipment.completeIt.invoice-update-failed', [
+                    'invoice'   => $invoice->document_number,
+                ]) );
         };
 
         // update partnerable credit
         if (!$this->partnerable->updateCreditUsed())
             // redirect error
-            return $this->documentError( $this->partnerable->errors()->first() ?? 'payments::receipments.partnerable-update-credit-used-failed' );
+            return $this->documentError( $this->partnerable->errors()->first() ?? 'sales::receipment.completeIt.partnerable-update-credit-used-failed' );
 
         // return completed status
-        return Document::STATUS_Completed;
+        return self::STATUS_Completed;
     }
 
 }
