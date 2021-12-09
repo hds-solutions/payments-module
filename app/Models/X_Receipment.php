@@ -31,8 +31,8 @@ abstract class X_Receipment extends Base\Model {
         'document_number'   => [ 'sometimes' ],
     ];
 
-    public function isPurchase():bool {
-        return $this->is_purchase;
+    public function getIsSaleAttribute():bool {
+        return !$this->is_purchase;
     }
 
     public function getInvoicesAmountAttribute() {

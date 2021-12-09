@@ -5,6 +5,7 @@ namespace HDSSolutions\Laravel\Models;
 use HDSSolutions\Laravel\Interfaces\Document;
 use HDSSolutions\Laravel\Traits\HasDocumentActions;
 use HDSSolutions\Laravel\Traits\HasPartnerable;
+use Illuminate\Database\Eloquent\Builder;
 
 class Receipment extends X_Receipment implements Document {
     use HasDocumentActions,
@@ -81,6 +82,14 @@ class Receipment extends X_Receipment implements Document {
 
     public function payments() {
         return $this->payments;
+    }
+
+    public function scopeIsPurchase(Builder $query, bool $is_purchase = true) {
+        return $query->where('is_purchase', $is_purchase);
+    }
+
+    public function scopeIsSale(Builder $query, bool $is_sale = true) {
+        return $this->scopeIsPurchase($query, !$is_sale);
     }
 
     public function getPaymentsAttribute() {
